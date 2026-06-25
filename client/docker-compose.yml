@@ -1,0 +1,11 @@
+services:
+  lustbuster:
+    build: .
+    container_name: lustbuster
+    restart: unless-stopped
+    networks:
+      - web_proxy
+
+networks:
+  web_proxy:
+    external: true

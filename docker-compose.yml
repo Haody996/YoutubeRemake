@@ -1,0 +1,31 @@
+services:
+  lustbuster-client:
+    build:
+      context: ./client
+      args:
+        - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+    container_name: lustbuster_web
+    restart: unless-stopped
+    networks:
+      - web_proxy
+
+  lustbuster-server:
+    build: ./server
+    container_name: lustbuster_api
+    restart: unless-stopped
+    environment:
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - ADMIN_USERNAMES=${ADMIN_USERNAMES:-}
+    volumes:
+      - ./server/data:/app/data
+    networks:
+      - web_proxy
+
+networks:
+  web_proxy:
+    external: true
